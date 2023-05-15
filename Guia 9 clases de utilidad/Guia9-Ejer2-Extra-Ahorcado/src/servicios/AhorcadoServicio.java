@@ -1,4 +1,6 @@
 package servicios;
+
+
 /*
 Definir los siguientes métodos en
 AhorcadoService:
@@ -89,14 +91,19 @@ public class AhorcadoServicio {
 
     public void juego() {
         crearJuego();
-        longitud();
+        JOptionPane.showMessageDialog(null, "La palabra adivinar tiene " +longitud() + " letras");
+        int intentos = palabra.getJugadasMaximas();
 
+        char [] letrasIngresadas = new char[intentos]; // creo un vector para guardar las letras que se van ingresanso
+        Arrays.fill(letrasIngresadas, '-'); // Inicializamos la palabra actual con asteriscos
+        int contador =0; // creamos un contador para usar como indice del array de letras ingresadas
         char[] palabraOriginal = palabra.getPalabra().clone(); // Hacemos una copia de la palabra original
 
         char[] palabraActual = new char[palabraOriginal.length];
         Arrays.fill(palabraActual, '*'); // Inicializamos la palabra actual con asteriscos
         do {
-           char letra = JOptionPane.showInputDialog("Ingrese la letra:").charAt(0);
+            char letra = JOptionPane.showInputDialog("Ingrese la letra:").charAt(0);
+
             buscar(letra);
 
             boolean encontrada = encontradas(letra);
@@ -118,23 +125,34 @@ public class AhorcadoServicio {
                     palabraActual[i] = letra;
                 }
             }
-            JOptionPane.showMessageDialog(null, "Palabra: " + String.valueOf(palabraActual));
-        } while (palabra.getLetrasEncontradas() != palabra.getPalabra().length && intentos() != 0);
+            //cargamos las letras ingresadas que no pertenecen a la palabra en el vector
+            for (int i = 0; i < palabraOriginal.length; i++) {
+                if (palabraOriginal[contador] != letra) {
+                    letrasIngresadas[contador] = letra;
+                }
+            }
+            contador ++;
 
+            //Mostrar como se va formando la palabra
+            JOptionPane.showMessageDialog(null, "Palabra: " + String.valueOf(palabraActual));
+            // Mostrar letras ingresadas una por una
+            //se utiliza un StringBuilder para construir el mensaje a mostrar. Se itera sobre los elementos de
+            //letrasIngresadas hasta el índice contador (que representa la cantidad de letras ingresadas),
+            //y se agrega cada letra al StringBuilder. También se verifica si es la última letra para evitar
+            //agregar una coma después de la última letra.
+            StringBuilder mensaje = new StringBuilder("Letras Ingresadas: [");
+            for (int i = 0; i < contador; i++) {
+                mensaje.append(letrasIngresadas[i]); // el append agrega caracteres a la cadena, desde la ultima poscion
+                if (i < contador - 1) {
+                    mensaje.append(", ");
+                }
+            }
+            mensaje.append("]");
+
+            JOptionPane.showMessageDialog(null, mensaje.toString());
+
+        } while (palabra.getLetrasEncontradas() != palabra.getPalabra().length && intentos() != 0);
 
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
